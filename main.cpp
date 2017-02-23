@@ -20,8 +20,9 @@ class vertice{
 		vertice() : conex(0) {};
 		vertice(int i) : conex(0), index(i){};
 		void print_adj(){
+			cout << " * " << endl;
 			for (vector<lado>::iterator it = adj.begin(); it != adj.end(); ++it){
-				cout << it->vertex << " " ; 
+				cout << it->vertex << " " << it->costo << " * " ; 
 			}
 			cout << endl;
 		}
@@ -42,27 +43,40 @@ int obtener_numero(){
 	return numero;
 }
 
-void leer_vector(int tipo){
-	//v1 v2 costo valor
-	int n1,n2,n3,n4;
-	vertice v1,v2;
-	cin >> n1 >> n2 >> n3 >> n4;
-	lado b = lado(n2,n3,n4);
-	cout << b.vertex << " " << b.win << endl;
-	//cout << "n1 " << n1 << " "<< "n2 " << n2 << " " << "n3 " << n3<< " " << "n4 " << n4 << " " << endl;
-}
-
-int main(){
+vector<vertice> leer_vector(){
 	int number, numero2;
+	int n1,n2,n3,n4;
+	vector<vertice> grafo;
 	
 	number = obtener_numero();
 	cout << number << endl;
 	numero2 = obtener_numero();
 	cout << numero2 << endl;
-	for(int i = 0; i < numero2; i++)
-		leer_vector(1);
+
+	grafo.resize(number+1);
+	for(int i = 0; i < numero2; i++){
+		cin >> n1 >> n2 >> n3 >> n4;
+		grafo[n1].adj.push_back(lado(n2,n3,n4));
+		grafo[n2].adj.push_back(lado(n1,n3,n4));
+	}
 	numero2 = obtener_numero();
-	for(int i = 0; i < numero2; i++)
-		leer_vector(1);
+	for(int i = 0; i < numero2; i++){
+		cin >> n1 >> n2 >> n3 >> n4;
+		grafo[n1].adj.push_back(lado(n2,n3,n4));
+		grafo[n2].adj.push_back(lado(n1,n3,n4));
+	}
+	return grafo;
+	//v1 v2 costo valor
+	// vertice v1,v2;
+	
+	// lado b = lado(n2,n3,n4);
+	// cout << b.vertex << " " << b.win << endl;
+	//cout << "n1 " << n1 << " "<< "n2 " << n2 << " " << "n3 " << n3<< " " << "n4 " << n4 << " " << endl;
+}
+
+int main(){
+	vector<vertice> g = leer_vector();
+	g[1].print_adj();
+	g[14].print_adj();
 
 }
