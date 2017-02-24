@@ -4,6 +4,19 @@
 
 using namespace std;
 
+
+/*
+	Idea:
+		Leer lados R
+			Generar componentes conexas
+		Leer otros lados
+			Buscar camino de costo minimo (Minima perdida) entre ellas
+			Buscar camino de costo minimo entre componentes y fuente.
+
+*/
+
+
+
 class lado {
 	public:
 		int vertex;
@@ -16,9 +29,11 @@ class vertice{
 	public:
 		int index;
 		bool conex;
+		bool visitado;
 		vector<lado> adj;
-		vertice() : conex(0) {};
+		vertice() : conex(0){};
 		vertice(int i) : conex(0), index(i){};
+
 		void print_adj(){
 			cout << " * " << endl;
 			for (vector<lado>::iterator it = adj.begin(); it != adj.end(); ++it){
@@ -26,8 +41,32 @@ class vertice{
 			}
 			cout << endl;
 		}
+
+		void limpiar(){
+			conex = 0;
+		}
 };
 
+class grafo {
+	vector<vertice> v;
+
+	void resize(int n){
+		v.resize(n);
+	}
+
+	void agregar_lado(int nodo, lado r){
+		v[nodo].adj.push_back(r);
+	}
+
+	void dfs(){
+		for (vector<vertice>::iterator it = v.begin(); it != v.end(); ++it){
+				// cout << it->vertex << " " << it->costo << " * " ; 
+			if (!it->conex){
+
+			}
+		}
+	}
+};
 
 int obtener_numero(){
 	int numero;
@@ -43,39 +82,36 @@ int obtener_numero(){
 	return numero;
 }
 
-vector<vertice> leer_vector(){
-	int number, numero2;
+vector<vertice> leer_grafo(){
+	int nodos, ladosR, ladosE;
 	int n1,n2,n3,n4;
 	vector<vertice> grafo;
 	
-	number = obtener_numero();
-	cout << number << endl;
-	numero2 = obtener_numero();
-	cout << numero2 << endl;
+	nodos = obtener_numero();
+	cout << "Numero de nodos: " << nodos << endl;
+	ladosR = obtener_numero();
+	cout << ladosR << endl;
 
-	grafo.resize(number+1);
-	for(int i = 0; i < numero2; i++){
+	grafo.resize(nodos+1);
+	for(int i = 0; i < ladosR; i++){
 		cin >> n1 >> n2 >> n3 >> n4;
 		grafo[n1].adj.push_back(lado(n2,n3,n4));
 		grafo[n2].adj.push_back(lado(n1,n3,n4));
 	}
-	numero2 = obtener_numero();
-	for(int i = 0; i < numero2; i++){
+
+	// Hay que buscar las componentes conexas en el grafo hasta este punto.
+
+	ladosE = obtener_numero();
+	for(int i = 0; i < ladosE; i++){
 		cin >> n1 >> n2 >> n3 >> n4;
 		grafo[n1].adj.push_back(lado(n2,n3,n4));
 		grafo[n2].adj.push_back(lado(n1,n3,n4));
 	}
 	return grafo;
-	//v1 v2 costo valor
-	// vertice v1,v2;
-	
-	// lado b = lado(n2,n3,n4);
-	// cout << b.vertex << " " << b.win << endl;
-	//cout << "n1 " << n1 << " "<< "n2 " << n2 << " " << "n3 " << n3<< " " << "n4 " << n4 << " " << endl;
 }
 
 int main(){
-	vector<vertice> g = leer_vector();
+	vector<vertice> g = leer_grafo();
 	g[1].print_adj();
 	g[14].print_adj();
 
