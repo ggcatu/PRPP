@@ -13,6 +13,9 @@ using namespace std;
 			Buscar camino de costo minimo (Minima perdida) entre ellas
 			Buscar camino de costo minimo entre componentes y fuente.
 
+	El nodo 0 es basura
+	El nodo 1 es el deposito
+
 */
 
 class lado {
@@ -68,7 +71,7 @@ class grafo {
 			//cout << "Index: " << r->index << endl;
 			r->conex = true;
 			for (vector<lado>::iterator it = r->adj.begin(); it != r->adj.end(); ++it){
-				cout << "Accediendo: " << it->vertex << endl;
+				//cout << "Accediendo: " << it->vertex << endl;
 				if (!v[it->vertex].conex){
 					dfs_rec(&v[it->vertex], ac);
 				}
@@ -81,15 +84,14 @@ class grafo {
 			for (vector<vertice>::iterator it = v.begin(); it != v.end(); ++it){
 				if (!it->conex){
 					tmp.clear();
-					cout << "Empezando" << endl;
 					dfs_rec(&(*it), &tmp);
-					cout << "Termine" << endl;
 					cc.push_back(tmp);
+					for (vector<int>::iterator it = tmp.begin(); it != tmp.end(); ++it){
+						cout << *it << " " ;
+					}
+					cout << endl;
 				}
-				for (vector<int>::iterator it = tmp.begin(); it != tmp.end(); ++it){
-					cout << *it << " " ;
-				}
-				cout << "Fin componente conexa" << endl;
+				
 			}
 		}
 };
@@ -125,8 +127,6 @@ grafo leer_grafo(){
 		g.agregar_lado(n1,lado(n2,n3,n4));
 		g.agregar_lado(n2,lado(n1,n3,n4));
 	}
-	g.v[1].print_adj();
-	g.v[14].print_adj();
 	g.dfs();
 	// Hay que buscar las componentes conexas en el grafo hasta este punto.
 
