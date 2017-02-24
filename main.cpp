@@ -15,8 +15,6 @@ using namespace std;
 
 */
 
-
-
 class lado {
 	public:
 		int vertex;
@@ -48,24 +46,52 @@ class vertice{
 };
 
 class grafo {
-	vector<vertice> v;
+	public:
+		vector<vertice> v;
+		void resize(int n){
+			v.resize(n);
+		}
 
-	void resize(int n){
-		v.resize(n);
-	}
-
-	void agregar_lado(int nodo, lado r){
-		v[nodo].adj.push_back(r);
-	}
-
-	void dfs(){
-		for (vector<vertice>::iterator it = v.begin(); it != v.end(); ++it){
-				// cout << it->vertex << " " << it->costo << " * " ; 
-			if (!it->conex){
-
+		void enumerar(){
+			int n = 0;
+			for (vector<vertice>::iterator it = v.begin(); it != v.end(); ++it){
+				it->index = n++;
 			}
 		}
-	}
+
+		void agregar_lado(int nodo, lado r){
+			v[nodo].adj.push_back(r);
+		}
+		
+		void dfs_rec(vertice * r, vector<int> * ac){
+			ac->push_back(r->index);
+			//cout << "Index: " << r->index << endl;
+			r->conex = true;
+			for (vector<lado>::iterator it = r->adj.begin(); it != r->adj.end(); ++it){
+				cout << "Accediendo: " << it->vertex << endl;
+				if (!v[it->vertex].conex){
+					dfs_rec(&v[it->vertex], ac);
+				}
+			}
+		}
+
+		void dfs(){
+			vector< vector<int> > cc;
+			vector<int> tmp;
+			for (vector<vertice>::iterator it = v.begin(); it != v.end(); ++it){
+				if (!it->conex){
+					tmp.clear();
+					cout << "Empezando" << endl;
+					dfs_rec(&(*it), &tmp);
+					cout << "Termine" << endl;
+					cc.push_back(tmp);
+				}
+				for (vector<int>::iterator it = tmp.begin(); it != tmp.end(); ++it){
+					cout << *it << " " ;
+				}
+				cout << "Fin componente conexa" << endl;
+			}
+		}
 };
 
 int obtener_numero(){
@@ -82,37 +108,38 @@ int obtener_numero(){
 	return numero;
 }
 
-vector<vertice> leer_grafo(){
+grafo leer_grafo(){
 	int nodos, ladosR, ladosE;
 	int n1,n2,n3,n4;
-	vector<vertice> grafo;
+	grafo g;
 	
 	nodos = obtener_numero();
 	cout << "Numero de nodos: " << nodos << endl;
 	ladosR = obtener_numero();
 	cout << ladosR << endl;
 
-	grafo.resize(nodos+1);
+	g.resize(nodos+1);
+	g.enumerar();
 	for(int i = 0; i < ladosR; i++){
 		cin >> n1 >> n2 >> n3 >> n4;
-		grafo[n1].adj.push_back(lado(n2,n3,n4));
-		grafo[n2].adj.push_back(lado(n1,n3,n4));
+		g.agregar_lado(n1,lado(n2,n3,n4));
+		g.agregar_lado(n2,lado(n1,n3,n4));
 	}
-
+	g.v[1].print_adj();
+	g.v[14].print_adj();
+	g.dfs();
 	// Hay que buscar las componentes conexas en el grafo hasta este punto.
 
 	ladosE = obtener_numero();
 	for(int i = 0; i < ladosE; i++){
 		cin >> n1 >> n2 >> n3 >> n4;
-		grafo[n1].adj.push_back(lado(n2,n3,n4));
-		grafo[n2].adj.push_back(lado(n1,n3,n4));
+		g.agregar_lado(n1,lado(n2,n3,n4));
+		g.agregar_lado(n2,lado(n1,n3,n4));
 	}
-	return grafo;
+	return g;
 }
 
 int main(){
-	vector<vertice> g = leer_grafo();
-	g[1].print_adj();
-	g[14].print_adj();
+	grafo g = leer_grafo();
 
 }
